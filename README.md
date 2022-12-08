@@ -1,5 +1,12 @@
 # zk-rollup-demo
-An end to end demo of zero knowledge rollups for SPACE 2022 conference.
+This repository contains code for workshop on ZK rollups for the SPACE 2022 conference. We illustrate a toy, but an end to end
+zk rollup system, using a local [ganache blockchain](https://trufflesuite.com/ganache/). The workshop illustrates:
+- Writing circuits for zero knowledge proofs using [circom](https://github.com/iden3/circom).
+- Generating and verifying proofs for above circuits.
+- Expressing the state update of rollup chain as a circuit.
+- Verifying the proof of state update in a smart contract.
+
+
 
 Relevant Links:
 - [Node Installation](https://npm.github.io/installation-setup-docs/installing/using-a-node-version-manager.html)
