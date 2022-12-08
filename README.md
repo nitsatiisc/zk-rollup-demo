@@ -9,3 +9,6 @@ Relevant Links:
 - [Managing Smart Contracts (truffle)](https://trufflesuite.com/truffle/)
 
 
+Also see for more information:
+- [RollupNC tutorial](https://github.com/rollupnc/RollupNC_tutorial)
+- [Zkswap Contracts](https://github.com/l2labs/zkswap-contracts)
