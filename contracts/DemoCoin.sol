@@ -2,7 +2,7 @@
 // Tells the Solidity compiler to compile only from v0.8.13 to v0.9.0
 pragma solidity ^0.8.13;
 
-import "./verifier.sol";
+import "./verifier50.sol";
 
 // Operations:
 // createAccount(pubkey)
@@ -15,10 +15,10 @@ contract DemoCoin is Verifier {
     // contract deployer
     address public owner;
     uint32 public constant MAX_DEPOSITS_PER_BLOCK = 5;
-    uint32 public constant MAX_TRANSFERS_PER_BLOCK = 15;
+    uint32 public constant MAX_TRANSFERS_PER_BLOCK = 50;
     uint32 public constant MAX_WITHDRAWALS_PER_BLOCK = 5;
-    uint32 public constant MAX_OPERATIONS = 15;
-    uint public constant INITIAL_ROOT = 18624073597175848981360978626338278459332667842363503605912478150988181130897;
+    uint32 public constant MAX_OPERATIONS = 50;
+    uint public constant INITIAL_ROOT = 13477820501632140365489030535394567747840151741601345570517626175596397063210;
 
     // Structure for storing L2 accounts
     struct AccountInfo {

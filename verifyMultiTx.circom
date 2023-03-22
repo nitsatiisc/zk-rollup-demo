@@ -255,5 +255,5 @@ template ProcessMultiTx(nTransactions, k) {
 
 }
 
-component main {public [old_root, final_root, folded_tx]} = ProcessMultiTx(15,5);
+component main {public [old_root, final_root, folded_tx]} = ProcessMultiTx(50,5);
 //component main = ProcessMultiTx(20,5);

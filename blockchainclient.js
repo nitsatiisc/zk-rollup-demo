@@ -5,7 +5,7 @@ const { stringifyBigInts } = require("wasmsnark/tools/stringifybigint.js");
 var Contract = require("web3-eth-contract");
 Contract.setProvider('ws://localhost:8545');
 const CONTRACT_ABI = JSON.parse(fs.readFileSync('./build/contracts/DemoCoin.json'));
-const CONTRACT_ADDR = "0x4DA5e7a17D9EB1712B3C6C29185b755568185687";
+const CONTRACT_ADDR = "0xddEe6B5f670d0a2A966eCD9E30b272659ca0e461";
 var contract = new Contract(CONTRACT_ABI["abi"], CONTRACT_ADDR);
 
 var Web3 = require("web3");
@@ -34,12 +34,12 @@ async function verifyBlock(blockNumber) {
     console.log(accounts[0]);
     const inputs = JSON.parse(fs.readFileSync("./transactions/txInput.json"));
     const { proof, publicSignals } = await snarkjs.groth16.fullProve(inputs, 
-        "./verifyMultiTx_js/verifyMultiTx.wasm", "circuit_final.zkey");
+        "./verifyMultiTx_js/verifyMultiTx.wasm", "./zk-keys/verifyMultiTx_final.zkey");
 
     console.log("Proof: ");
     console.log(JSON.stringify(proof, null, 1));
 
-    const vKey = JSON.parse(fs.readFileSync("verification_key.json"));
+    const vKey = JSON.parse(fs.readFileSync("./zk-keys/verification_key.json"));
 
     const res = await snarkjs.groth16.verify(vKey, publicSignals, proof);
 
@@ -84,7 +84,7 @@ process_option = async function(argv) {
     } else if (argv[2].localeCompare("transfer") == 0) {
         var accounts  = await web3.eth.getAccounts();
         // do a normal transfer
-        await web3.eth.sendTransaction({from:accounts[0], to:CONTRACT_ADDR, value:'1', gasLimit: 1000000});
+        await web3.eth.sendTransaction({from:accounts[3], to:CONTRACT_ADDR, value:'1', gasLimit: 1000000});
         process.exit(0);
     }
 }

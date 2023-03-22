@@ -9,5 +9,26 @@
     "web3": "^1.8.1",
     "web3-eth-contract": "^1.8.1",
     "websnark": "^0.0.5"
-  }
+  },
+  "name": "zk-rollup-demo",
+  "description": "This repository contains code for workshop on ZK rollups for the SPACE 2022 conference. We illustrate a toy, but an end to end zk rollup system, using a local [ganache blockchain](https://trufflesuite.com/ganache/). The workshop illustrates: - Writing circuits for zero knowledge proofs using [circom](https://github.com/iden3/circom). - Generating and verifying proofs for above circuits. - Expressing the state update of rollup chain as a circuit. - Verifying the proof of state update in a smart contract.",
+  "version": "1.0.0",
+  "main": "blockchainclient.js",
+  "devDependencies": {
+    "mocha": "^8.4.0"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nitsatiisc/zk-rollup-demo.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nitsatiisc/zk-rollup-demo/issues"
+  },
+  "homepage": "https://github.com/nitsatiisc/zk-rollup-demo#readme"
 }

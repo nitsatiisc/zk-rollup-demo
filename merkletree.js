@@ -56,9 +56,13 @@ initializeAccountTree = async function() {
     ];
     // compute leaf nodes from account information
     for(let i=0; i < numAccounts; i++) {
+        // choose a 32 byte private key sk from a buffer.
         keys[i] = Buffer.from(seed[i].padStart(64,'0'), "hex");
+        // create a public key for a the above private key. pk = sk.G
         let pubKey =  eddsa.prv2pub(keys[i]);
+        // data for leaf = [ ethereum-addr, eddsa-pub-key, balance, nonce ]
         data[i] = {addr: ethers.BigNumber.from(accounts[i]), pubkey: pubKey, balance: 100, nonce: 0};
+        // actual content of leaf i = mimc(data)
         nodes[numAccounts -1 + i] = mimcjs.multiHash([data[i].pubkey[0], data[i].pubkey[1], data[i].balance, data[i].addr, data[i].nonce]);
     }
 
@@ -68,7 +72,6 @@ initializeAccountTree = async function() {
         let j = numAccounts - 2 - i;
         nodes[j] = mimcjs.multiHash([nodes[2*j+1], nodes[2*j+2]]);
     }
-
 
     fs.writeFileSync(
         "./accounts-keys.json",
@@ -247,7 +250,7 @@ processTxBatch = async function(txBatch)
         sender_proof[i] = [];
         get_path(nodes, sender_index[i], sender_proof[i]);
 
-        if (check_root(nodes[0], nodes[numAccounts -1 + sender_index[i]], sender_proof[i], sender_proof_pos[i], mimcjs) == false)
+        if (check_root(nodes[0], nodes[numAccounts -1 + sender_index[i]], sender_proof[i], sender_proof_pos[i], mimcjs) === false)
         {
             console.log("Incorrect sender path computed");
         }
@@ -273,7 +276,7 @@ processTxBatch = async function(txBatch)
         receiver_proof[i] = [];
         get_path(nodes, receiver_index[i], receiver_proof[i]);
         
-        if (check_root(nodes[0], nodes[numAccounts -1 + receiver_index[i]], receiver_proof[i], receiver_proof_pos[i], mimcjs) == false)
+        if (check_root(nodes[0], nodes[numAccounts -1 + receiver_index[i]], receiver_proof[i], receiver_proof_pos[i], mimcjs) === false)
         {
             console.log("Incorrect receiver path computed");
         }
@@ -360,7 +363,8 @@ processTxBatch = async function(txBatch)
 }
 
 // first transaction batch
-var txBatch1 = [[1, 1, 2, 11, 0], [1, 3, 4, 0, 0], [1, 1, 3, 0, 1], [1, 5, 6, 0, 0], [1, 4, 8, 0, 0],
+var txBatch1 = [
+    [1, 1, 2, 11, 0], [1, 3, 4, 0, 0], [1, 1, 3, 0, 1], [1, 5, 6, 0, 0], [1, 4, 8, 0, 0],
     [1, 1, 2, 0, 2], [1, 1, 2, 0, 3], [1, 1, 2, 0, 4], [1, 1, 2, 0, 5], [1, 1, 2, 0, 6], 
     [1, 1, 2, 0, 7], [1, 1, 2, 0, 8], [1, 1, 2, 0, 9], [1, 1, 2, 0, 10], [1, 1, 2, 0, 11]
 ];
@@ -371,19 +375,38 @@ var txBatch2 = [[1, 1, 2, 11, 12], [1, 3, 4, 0, 1], [1, 1, 3, 0, 13], [1, 5, 6, 
     [1, 1, 2, 0, 19], [1, 1, 2, 0, 20], [1, 1, 2, 0, 21], [1, 1, 2, 0, 22], [1, 1, 2, 0, 23]
 ];
 
+var txBatch50 = [
+    [1, 1, 2, 11, 0], [1, 3, 4, 0, 0], [1, 1, 3, 0, 1], [1, 5, 6, 0, 0], [1, 4, 8, 0, 0],
+    [1, 1, 2, 0, 2], [1, 1, 2, 0, 3], [1, 1, 2, 0, 4], [1, 1, 2, 0, 5], [1, 1, 2, 0, 6], 
+    [1, 1, 2, 0, 7], [1, 1, 2, 0, 8], [1, 1, 2, 0, 9], [1, 1, 2, 0, 10], [1, 1, 2, 0, 11],
+    [1, 1, 2, 11, 12], [1, 3, 4, 0, 1], [1, 1, 3, 0, 13], [1, 5, 6, 0, 1], [1, 4, 8, 0, 1],
+    [1, 1, 2, 0, 14], [1, 1, 2, 0, 15], [1, 1, 2, 0, 16], [1, 1, 2, 0, 17], [1, 1, 2, 0, 18], 
+    [1, 1, 2, 0, 19], [1, 1, 2, 0, 20], [1, 1, 2, 0, 21], [1, 1, 2, 0, 22], [1, 1, 2, 0, 23]
+]
+
+for(let i=0; i < 20; i++) {
+    txBatch50.push([1, 1, 2, 0, 24+i]);
+}
+
+
 process_option = async function(arg) {
     console.log(arg);
-    if (arg.localeCompare("initialize") == 0) {
+    if (arg.localeCompare("initialize") === 0) {
         root = await initializeAccountTree();
         console.log("Initial Root:", root);
         process.exit(0);
-    } else if (arg.localeCompare("commitfirst") == 0) {
+    } else if (arg.localeCompare("commitfirst") === 0) {
         newRoot = await processTxBatch(txBatch1);
         console.log("Created transaction artificats");
         console.log("newRoot:", newRoot);
         process.exit(0);
-    } else if (arg.localeCompare("commitsecond") == 0) {
+    } else if (arg.localeCompare("commitsecond") === 0) {
         newRoot = await processTxBatch(txBatch2);
+        console.log("Created transaction artificats");
+        console.log("newRoot:", newRoot);
+        process.exit(0);
+    } else if (arg.localeCompare("commit50") === 0) {
+        newRoot = await processTxBatch(txBatch50);
         console.log("Created transaction artificats");
         console.log("newRoot:", newRoot);
         process.exit(0);
