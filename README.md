@@ -72,5 +72,13 @@ transactions/txInput.json
     - Authentication paths for receiver leaf before and after update.
     - Valid signature on each transaction data.
   
-
+  - ### Verifying a single transaction 
+    - Let $(sender_i, recv_i, v_i)$ be the public part of transaction. Let $root_i$ 
+    and $root_{i+1}$ denote the merkle root before and after applying the transaction. 
+    - The prover shows knowledge of auxiliary inputs $(eth_i,pk_i, nonce_i, nonce_{i+1}, senderbal_i, introot_i,
+    senderpath_i, recvbal_i, recvbal_{i+1}, sig_i)$ such that:
+      - $(eth_i||pk_i||senderbal_i||nonce_i)$ is a leaf at position $sender_i$ under $root_i$.
+      - $(eth_i||pk_i||senderbal_{i+1}||nonce_i+1)$ is a leaf at position $sender_i$ under $introot_i$ 
+      at position $sender_i$.
+      
 ## Linking transactions to L1
