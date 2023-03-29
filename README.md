@@ -104,7 +104,7 @@ transactions/txInput.json
       - 1 subcircuit for checking EDDSA signature $\sigma_i$ on message $(i,j,nonce_i)$.
       - 1 comparison. 
     The overall circuit complexity is roughy $B(4d\cdot C_{hash} + C_{sig} + C_{comp})$. For 
-    $B=50$,$d=5$, $C_{hash}=1000$, $C_{sig}=1000$ and $C_{comp}=100$, the expression works out 
+    $B=50$, $d=5$, $C_{hash}=1000$, $C_{sig}=1000$ and $C_{comp}=100$, the expression works out 
     to approximately $1$ million.
   
 
