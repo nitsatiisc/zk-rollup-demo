@@ -73,12 +73,41 @@ transactions/txInput.json
     - Valid signature on each transaction data.
   
   - ### Verifying a single transaction 
-    - Let $(sender_i, recv_i, v_i)$ be the public part of transaction. Let $root_i$ 
-    and $root_{i+1}$ denote the merkle root before and after applying the transaction. 
-    - The prover shows knowledge of auxiliary inputs $(eth_i,pk_i, nonce_i, nonce_{i+1}, senderbal_i, introot_i,
-    senderpath_i, recvbal_i, recvbal_{i+1}, sig_i)$ such that:
-      - $(eth_i||pk_i||senderbal_i||nonce_i)$ is a leaf at position $sender_i$ under $root_i$.
-      - $(eth_i||pk_i||senderbal_{i+1}||nonce_i+1)$ is a leaf at position $sender_i$ under $introot_i$ 
-      at position $sender_i$.
+    Let $(i, j, v)$ be the public part of transaction denoting transfer of amount 
+    $v$ from account $i$ to account $j$. Let $rt$ and $rt'$ denote merkle root 
+    of accounts tree before and after applying the transaction. The prover shows 
+    knowledge of following witness to prove correctness of update:
+    
+      - Initial Sender leaf: $(addr_i, pub_i, bal_i, nonce_i)$ and $path_i$ consisting 
+      of partner nodes for the sender leaf.
+      - Inital Receiver leaf: $(addr_j, pub_j, bal_j, nonce_j)$ and path $path_j$ consisting 
+      of partner nodes for the receiver leaf.
+      - Updated Sender leaf: $(addr_i, pub_i, bal_i', nonce_i')$ and intermediate root 
+      $irt$ computed from updated sender leaf and $path_i$. We also check $v\leq bal_i$, 
+      $bal_i'=bal_i-v$ and $nonce_i'=nonce_i+1$.
+      - Updated Receiver leaf: $(addr_j, pub_j, bal_j', nonce_j)$ and root $irt'$ computed 
+      from updated receiver leaf and $path_j$. We check that $irt'==root'$. 
+      - Signature check: Signature $\sigma_i$ which is valid with respect to public key 
+      $pub_i$ on message $(i, j, v, nonce_i)$. 
+    
+  - ### Verifying multiple transactions
+    We sequentially repeat the circuit for verifying single transaction, providing 
+    intermediate merkle roots after applying each transaction as part of the witness.
+
+  - ### Circuit Complexity
+    For a batch size of $B$ transactions, the circuit complexity is roughly $B.C_{one}$ 
+    where $C_{one}$ denotes the circuit complexity of verifying one transaction. We decompose 
+    $C_{one}$ as:
+      - 4 subcircuits $C_{merkle}$ for checking computation of merkle root given leaf 
+      and partner nodes. Assuming $d$ to be the depth of the trees, this results in $4d$
+      copies of the circuit computing the hash, i.e. $C_{merkle}\approx 4d.C_{hash}$.
+      - 1 subcircuit for checking EDDSA signature $\sigma_i$ on message $(i,j,nonce_i)$.
+      - 1 comparison. 
+    The overall circuit complexity is roughy $B(4d\cdot C_{hash} + C_{sig} + C_{comp})$. For 
+    $B=50$,$d=5$, $C_{hash}=1000$, $C_{sig}=1000$ and $C_{comp}=100$, the expression works out 
+    to approximately $1$ million.
+  
+
+
       
 ## Linking transactions to L1
