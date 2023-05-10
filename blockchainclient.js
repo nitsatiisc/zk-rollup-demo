@@ -5,7 +5,7 @@ const { stringifyBigInts } = require("wasmsnark/tools/stringifybigint.js");
 var Contract = require("web3-eth-contract");
 Contract.setProvider('ws://localhost:8545');
 const CONTRACT_ABI = JSON.parse(fs.readFileSync('./build/contracts/DemoCoin.json'));
-const CONTRACT_ADDR = "0xddEe6B5f670d0a2A966eCD9E30b272659ca0e461";
+const CONTRACT_ADDR = "0x1b07bA68D3B45520D765601D4409a0268FC39EC3";
 var contract = new Contract(CONTRACT_ABI["abi"], CONTRACT_ADDR);
 
 var Web3 = require("web3");
@@ -84,7 +84,7 @@ process_option = async function(argv) {
     } else if (argv[2].localeCompare("transfer") == 0) {
         var accounts  = await web3.eth.getAccounts();
         // do a normal transfer
-        await web3.eth.sendTransaction({from:accounts[3], to:CONTRACT_ADDR, value:'1', gasLimit: 1000000});
+        await web3.eth.sendTransaction({from:accounts[argv[3]], to:accounts[argv[4]], value:'1', gasLimit: 1000000});
         process.exit(0);
     }
 }

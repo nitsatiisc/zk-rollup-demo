@@ -28,7 +28,18 @@ Also see for more information:
 
 ## Steps to Run
 
-### Setup the Blockchain
+### Setup the worksapce
+1. Install circom and snarkjs by following the links above.
+2. Run `npm install` in the project directory to install required javascript modules.
+3. Fetch the ``powers-of-tau`` file and save it as `pot21_final.ptau`
+4. Create the directory `mkdir zk-keys` to store keys for zero knowledge circuits.
+5. Run `./generate-zk-keys.sh` to generate the keys. This may take a while
+ and will require occasional random input from the user. 
+6. Correct the solidity version of the generated `verifier.sol` file under 
+the `zk-keys` directory, and either copy it to path `contracts/verifier50.sol` or 
+create a soft-link. 
+
+### Setup the (Local) Ganache Blockchain
 1. We first create a blockchain instance in Ganache. Provide for 32 accounts with initial balance as 100.
 2. Set network id to 5777 and port to 8545. Set the gas limit per transaction to be high.
 3. Add truffle-config.js to the Ganache blockchain.

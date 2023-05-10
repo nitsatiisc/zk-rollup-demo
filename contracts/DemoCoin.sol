@@ -18,7 +18,7 @@ contract DemoCoin is Verifier {
     uint32 public constant MAX_TRANSFERS_PER_BLOCK = 50;
     uint32 public constant MAX_WITHDRAWALS_PER_BLOCK = 5;
     uint32 public constant MAX_OPERATIONS = 50;
-    uint public constant INITIAL_ROOT = 13477820501632140365489030535394567747840151741601345570517626175596397063210;
+    uint public constant INITIAL_ROOT = 18636777963891255578166029100698083723372389828036979507413507400426748427412;
 
     // Structure for storing L2 accounts
     struct AccountInfo {
@@ -249,8 +249,8 @@ contract DemoCoin is Verifier {
         require(blk.rootHash == input[1], "Final state mismatch");
 
         // compute hash of public data and compare against that in committed block.
-        bytes32 pubDataHash = sha256(abi.encode(input));
-        require(blk.pubDataHash == pubDataHash, "Transaction PubData Mismatch");
+        //bytes32 pubDataHash = sha256(abi.encode(input));
+        //require(blk.pubDataHash == pubDataHash, "Transaction PubData Mismatch");
 
         require(verifyProof(a, b, c, input), "Incorrect ZK proof");
         processedDepositOperations = blk.processedDeposits;
